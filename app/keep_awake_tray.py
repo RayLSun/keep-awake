@@ -147,7 +147,7 @@ def run_tray() -> None:
     menu = pystray.Menu(
         pystray.MenuItem(
             lambda item: "停止保持唤醒" if ka.active else "开始保持唤醒",
-            on_toggle, default=True),
+            on_toggle),
         pystray.MenuItem(
             lambda item: "屏幕常亮" + ("  ✓" if ka.keep_display else ""),
             on_display),
