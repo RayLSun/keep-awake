@@ -42,12 +42,17 @@ def set_execution_state(flags: int) -> None:
         raise OSError("SetThreadExecutionState failed")
 
 
+CREATE_NO_WINDOW = 0x08000000  # subprocess.CREATE_NO_WINDOW (py3.7+: use attribute)
+
+
+def _run(cmd):
+    return subprocess.run(cmd, capture_output=True,
+                          creationflags=CREATE_NO_WINDOW)
+
+
 def query_disk_timeout(which: str):
     """Current disk-idle timeout in seconds (0 = never). Last two hex = AC/DC."""
-    p = subprocess.run(
-        ["powercfg", "/q", "SCHEME_CURRENT", "SUB_DISK", "DISKIDLE"],
-        capture_output=True,
-    )
+    p = _run(["powercfg", "/q", "SCHEME_CURRENT", "SUB_DISK", "DISKIDLE"])
     out = p.stdout.decode("gbk", errors="replace")
     hexes = re.findall(r"0x([0-9A-Fa-f]{8})", out)
     if len(hexes) < 2:
@@ -57,10 +62,8 @@ def query_disk_timeout(which: str):
 
 
 def set_disk_timeout(ac_min: int, dc_min: int) -> None:
-    subprocess.run(["powercfg", "/change", "disk-timeout-ac", str(ac_min)],
-                   capture_output=True)
-    subprocess.run(["powercfg", "/change", "disk-timeout-dc", str(dc_min)],
-                   capture_output=True)
+    _run(["powercfg", "/change", "disk-timeout-ac", str(ac_min)])
+    _run(["powercfg", "/change", "disk-timeout-dc", str(dc_min)])
 
 
 class KeepAwake:
