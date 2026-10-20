@@ -22,6 +22,8 @@ import sys
 import threading
 import time
 
+APP_VERSION = "1.4.0"
+
 ES_CONTINUOUS = 0x80000000
 ES_SYSTEM_REQUIRED = 0x00000001
 ES_DISPLAY_REQUIRED = 0x00000002
@@ -159,14 +161,18 @@ def run_tray() -> None:
             on_disk),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("退出", on_quit),
+        pystray.Menu.SEPARATOR,
+        pystray.MenuItem(f"keep-awake v{APP_VERSION}", None, enabled=False),
     )
     ka.start()
-    log("tray started")
-    icon = pystray.Icon("keep-awake", icon_img("#2ecc71"), "keep-awake", menu)
+    log(f"tray started v{APP_VERSION}")
+    icon = pystray.Icon("keep-awake", icon_img("#2ecc71"),
+                        f"keep-awake v{APP_VERSION}", menu)
     icon.run()
 
 
 def run_test(seconds: int) -> int:
+    print(f"[test] keep-awake tray v{APP_VERSION}", flush=True)
     print("[test] baseline disk timeout: ac=%s dc=%s" %
           (query_disk_timeout("ac"), query_disk_timeout("dc")), flush=True)
     ka = KeepAwake()
