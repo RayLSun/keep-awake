@@ -1,0 +1,6 @@
+# LF for shell scripts (they break on macOS with CRLF)
+*.sh text eol=lf
+KeepAwake text eol=lf
+*.command text eol=lf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
