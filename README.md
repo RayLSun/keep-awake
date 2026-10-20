@@ -15,7 +15,20 @@
 
 ## 用法
 
-### Windows
+### Windows 托盘应用（推荐）
+
+双击 `app\dist\keep-awake-tray.exe`（绿色单文件，无需安装）：
+- 托盘图标：绿色=保持唤醒中，灰色=已停止
+- 右键菜单：开始/停止、屏幕常亮 ✓、防止硬盘休眠 ✓、退出
+- 无需管理员权限
+
+重新打包（可选，改代码后）：
+```
+cd app
+python -m PyInstaller --onefile --noconsole --name keep-awake-tray keep_awake_tray.py
+```
+
+### Windows 脚本版
 
 双击 `windows\start.bat`（或命令行）：
 
@@ -59,7 +72,7 @@ pmset -g assertions | grep -i caffeinate
 ## 已知限制
 
 - Windows：`powercfg /requests` 查看注册状态需要管理员控制台（脚本本身不需要管理员）
-- Windows：如果进程被强杀（taskkill / 断电），硬盘超时恢复会跳过（下次跑一次脚本再正常退出即可恢复）；睡眠阻止本身随进程死亡自动解除
+- Windows：托盘应用被 taskkill 强杀时硬盘超时不会自动恢复（正常菜单退出/重启后正常退出会恢复）；被强杀后重开应用再正常退出，或手动 `powercfg /change disk-timeout-ac 20` 即可。睡眠阻止本身随进程死亡自动解除
 - macOS：`caffeinate -s` 只在接通电源时阻止系统睡眠；电池下由 `-i` 覆盖空闲睡眠
 - Windows 休眠（Hibernate）快捷键/合盖动作不受影响，只挡"空闲超时"
 
