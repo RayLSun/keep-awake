@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# KeepAwake.app launcher - opens keep-awake.sh in a Terminal window
+# so you can see the status and stop it with Ctrl+C.
+SCRIPT="$(cd "$(dirname "$0")/../Resources" && pwd)/keep-awake.sh"
+if [ ! -f "$SCRIPT" ]; then
+    SCRIPT="$(cd "$(dirname "$0")/../../.." && pwd)/keep-awake.sh"
+fi
+exec osascript -e "tell application \"Terminal\" to do script \"'$SCRIPT'; exit\""
